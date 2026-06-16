@@ -8,7 +8,7 @@ import {
 	type SupplyData,
 } from 'n8n-workflow';
 import { Embeddings, type EmbeddingsParams } from '@langchain/core/embeddings';
-import { logWrapper } from '@n8n/ai-utilities';
+import { logWrapper, getConnectionHintNoticeField } from '@n8n/ai-utilities';
 
 // Khai báo cấu trúc các tham số khởi tạo mô hình nhúng Voyage
 export interface VoyageEmbeddingsParams extends EmbeddingsParams {
@@ -163,6 +163,19 @@ export class EmbeddingsVoyage implements INodeType {
 		defaults: {
 			name: 'Embeddings Voyage AI',
 		},
+		codex: {
+			categories: ['AI'],
+			subcategories: {
+				AI: ['Embeddings'],
+			},
+			resources: {
+				primaryDocumentation: [
+					{
+						url: 'https://docs.voyageai.com/',
+					},
+				],
+			},
+		},
 		inputs: [],
 		outputs: [NodeConnectionTypes.AiEmbedding],
 		outputNames: ['Embeddings'],
@@ -173,6 +186,7 @@ export class EmbeddingsVoyage implements INodeType {
 			},
 		],
 		properties: [
+			getConnectionHintNoticeField([NodeConnectionTypes.AiVectorStore]),
 			{
 				displayName: 'Model',
 				name: 'model',

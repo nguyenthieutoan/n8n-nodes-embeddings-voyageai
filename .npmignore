@@ -7,4 +7,18 @@ gulpfile.js
 .gitignore
 .github
 compose.yaml
-README.md
+
+# Ignore all other markdown files
+*.md
+!README.md
+DEVELOPMENT.md
+RELEASE.md
+N8N_NODE_GUIDELINES.md
+
+# Ignore testing and tooling configs
+coverage/
+tests/
+jest.config.js
+pnpm-workspace.yaml
+pnpm-lock.yaml
+package-lock.json
