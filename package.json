@@ -1,0 +1,49 @@
+{
+  "name": "n8n-nodes-embeddings-voyageai",
+  "version": "1.0.9",
+  "description": "n8n community node for Voyage AI Embeddings",
+  "license": "MIT",
+  "author": {
+    "name": "Jay Nguyen (Nguyễn Thiệu Toàn)",
+    "email": "me@nguyenthieutoan.com",
+    "url": "https://nguyenthieutoan.com"
+  },
+  "keywords": [
+    "n8n-community-node-package"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc && gulp build:icons",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "lint": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "n8n": {
+    "nodes": [
+      "dist/nodes/Voyage/EmbeddingsVoyage.node.js"
+    ],
+    "credentials": [
+      "dist/credentials/VoyageApi.credentials.js"
+    ]
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "n8n-workflow": "^1.0.0",
+    "@n8n/ai-utilities": "*"
+  },
+  "devDependencies": {
+    "@langchain/core": "^0.2.0",
+    "@n8n/ai-utilities": "^0.19.0",
+    "@n8n/node-cli": "^0.23.0",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "gulp": "^4.0.2",
+    "jest": "^29.0.0",
+    "n8n-workflow": "^1.0.0",
+    "ts-jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  }
+}

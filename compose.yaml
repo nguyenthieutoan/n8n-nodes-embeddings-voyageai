@@ -1,0 +1,10 @@
+services:
+  n8n-dev:
+    image: n8nio/n8n:latest
+    container_name: n8n-dev
+    restart: unless-stopped
+    ports:
+      - 5678:5678
+    volumes:
+      - ./data:/home/node/.n8n
+      - ./dist:/home/node/.n8n/custom/node_modules/n8n-nodes-embeddings-voyageai
