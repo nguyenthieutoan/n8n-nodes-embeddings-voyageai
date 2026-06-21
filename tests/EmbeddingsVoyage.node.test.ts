@@ -1,5 +1,6 @@
 jest.mock('@n8n/ai-utilities', () => ({
 	logWrapper: jest.fn().mockImplementation((provider: any) => provider),
+	getConnectionHintNoticeField: jest.fn().mockReturnValue({}),
 }));
 
 import { VoyageEmbeddingsModel } from '../nodes/Voyage/EmbeddingsVoyage.node';
