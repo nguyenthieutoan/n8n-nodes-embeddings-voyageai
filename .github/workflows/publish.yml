@@ -22,7 +22,7 @@ jobs:
           package-manager-cache: false # Không sử dụng cache để tránh sai lệch dữ liệu biên dịch
 
       - name: Install Project Dependencies
-        run: npm ci
+        run: npm install
 
       - name: Compile and Transpile TypeScript
         run: npm run build
