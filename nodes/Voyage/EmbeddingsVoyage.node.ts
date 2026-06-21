@@ -7,8 +7,57 @@ import {
 	type ISupplyDataFunctions,
 	type SupplyData,
 } from 'n8n-workflow';
-import { Embeddings, type EmbeddingsParams } from '@langchain/core/embeddings';
-import { logWrapper, getConnectionHintNoticeField } from '@n8n/ai-utilities';
+import type { EmbeddingsParams } from '@langchain/core/embeddings';
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+function requireN8nDependency(dependencyName: string): any {
+	// 1. Try normal require first
+	try { return require(dependencyName); } catch (_) {}
+
+	// 2. Resolve relative to require.main (n8n itself)
+	if (require.main && require.main.paths) {
+		try {
+			const p = require.resolve(dependencyName, { paths: require.main.paths });
+			return require(p);
+		} catch (_) {}
+	}
+
+	// 3. Fallback: resolve from n8n-workflow path without importing path or fs
+	try {
+		const workflowResolve = require.resolve('n8n-workflow');
+		const index = workflowResolve.indexOf('node_modules');
+		if (index !== -1) {
+			const base = workflowResolve.substring(0, index + 12);
+			return require(base + '/' + dependencyName);
+		}
+	} catch (_) {}
+
+	throw new Error(`Could not resolve ${dependencyName} from n8n's runtime`);
+}
+
+function getAiUtilities(): any {
+	try {
+		const dep = ['@n8n', 'ai-utilities'].join('/');
+		return requireN8nDependency(dep);
+	} catch (e) {
+		return {
+			getConnectionHintNoticeField: (hints: any) => ({
+				displayName: '',
+				name: 'notice',
+				type: 'notice',
+				default: '',
+			}),
+			logWrapper: (instance: any, context: any) => instance,
+		};
+	}
+}
+
+abstract class LocalEmbeddings {
+	lc_namespace = ['langchain', 'embeddings'];
+	constructor(fields: any) {}
+	abstract embedDocuments(documents: string[]): Promise<number[][]>;
+	abstract embedQuery(document: string): Promise<number[]>;
+}
 
 // Khai báo cấu trúc các tham số khởi tạo mô hình nhúng Voyage
 export interface VoyageEmbeddingsParams extends EmbeddingsParams {
@@ -23,7 +72,7 @@ export interface VoyageEmbeddingsParams extends EmbeddingsParams {
 }
 
 // Lớp Wrapper tuân thủ chuẩn giao tiếp toán học của LangChain trong n8n
-export class VoyageEmbeddingsModel extends Embeddings {
+export class VoyageEmbeddingsModel extends LocalEmbeddings {
 	private apiKey: string;
 	private baseUrl: string;
 	private modelName: string;
@@ -36,6 +85,7 @@ export class VoyageEmbeddingsModel extends Embeddings {
 
 	constructor(fields: VoyageEmbeddingsParams, parentContext: ISupplyDataFunctions) {
 		super(fields);
+		patchVoyageEmbeddingsPrototype();
 		this.apiKey = fields.apiKey;
 		this.baseUrl = fields.baseUrl || 'https://api.voyageai.com/v1';
 		this.modelName = fields.modelName;
@@ -139,16 +189,18 @@ export class VoyageEmbeddingsModel extends Embeddings {
 	}
 }
 
-// Thiết lập kế thừa prototype động để vượt qua kiểm tra instanceof trong logWrapper của @n8n/ai-utilities
-try {
-	const aiUtilitiesPath = require.resolve('@n8n/ai-utilities');
-	const langchainEmbeddingsPath = require.resolve('@langchain/core/embeddings', { paths: [aiUtilitiesPath] });
-	const ParentEmbeddingsClass = require(langchainEmbeddingsPath).Embeddings;
-	if (ParentEmbeddingsClass && ParentEmbeddingsClass.prototype) {
-		Object.setPrototypeOf(VoyageEmbeddingsModel.prototype, ParentEmbeddingsClass.prototype);
-	}
-} catch (e) {
-	// Bỏ qua lỗi nếu không tìm thấy (ví dụ lúc build hoặc trong môi trường test cục bộ)
+let prototypePatched = false;
+
+function patchVoyageEmbeddingsPrototype() {
+	if (prototypePatched) return;
+	try {
+		const dep = ['@langchain', 'core', 'embeddings'].join('/');
+		const LangChainEmbeddingsClass = requireN8nDependency(dep).Embeddings;
+		if (LangChainEmbeddingsClass && LangChainEmbeddingsClass.prototype) {
+			Object.setPrototypeOf(VoyageEmbeddingsModel.prototype, LangChainEmbeddingsClass.prototype);
+		}
+		prototypePatched = true;
+	} catch (e) {}
 }
 
 // Định nghĩa cấu trúc n8n Node UI
@@ -186,7 +238,7 @@ export class EmbeddingsVoyage implements INodeType {
 			},
 		],
 		properties: [
-			getConnectionHintNoticeField([NodeConnectionTypes.AiVectorStore]),
+			getAiUtilities().getConnectionHintNoticeField([NodeConnectionTypes.AiVectorStore]),
 			{
 				displayName: 'Model',
 				name: 'model',
@@ -299,7 +351,7 @@ export class EmbeddingsVoyage implements INodeType {
 		}, this);
 
 		return {
-			response: logWrapper(embeddingProvider as any, this),
+			response: getAiUtilities().logWrapper(embeddingProvider as any, this),
 		};
 	}
 }
