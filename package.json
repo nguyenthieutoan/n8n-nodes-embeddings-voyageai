@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-embeddings-voyageai",
-  "version": "1.0.11",
+  "version": "1.0.13",
   "description": "n8n community node for Voyage AI Embeddings",
   "license": "MIT",
   "author": {
@@ -8,6 +8,14 @@
     "email": "me@nguyenthieutoan.com",
     "url": "https://nguyenthieutoan.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguyenthieutoan/n8n-nodes-embeddings-voyageai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nguyenthieutoan/n8n-nodes-embeddings-voyageai/issues"
+  },
+  "homepage": "https://github.com/nguyenthieutoan/n8n-nodes-embeddings-voyageai#readme",
   "keywords": [
     "n8n-community-node-package"
   ],

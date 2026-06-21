@@ -1,6 +1,8 @@
 # n8n Voyage AI Embeddings Community Node
 
-Developed with ❤️ by **[Jay Nguyen (Nguyễn Thiệu Toàn)](https://nguyenthieutoan.com)**, a **[Verified n8n Creator](https://n8n.io/creators/nguyenthieutoan)** & CEO/Founder of **[GenStaff](https://genstaff.net)**.
+Developed and maintained by **[Jay Nguyen (Nguyễn Thiệu Toàn)](https://nguyenthieutoan.com)**.
+
+🛡️ **[Verified n8n Creator](https://n8n.io/creators/nguyenthieutoan)** | 💼 CEO/Founder of **[GenStaff](https://genstaff.net)**
 
 **Connect with me:**  
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nguyenthieutoan) [![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=flat&logo=facebook&logoColor=white)](https://www.facebook.com/nguyenthieutoan) [![Website](https://img.shields.io/badge/Website-nguyenthieutoan.com-brightgreen?style=flat)](https://nguyenthieutoan.com) [![Email](https://img.shields.io/badge/Email-me%40nguyenthieutoan.com-blue?style=flat)](mailto:me@nguyenthieutoan.com)
